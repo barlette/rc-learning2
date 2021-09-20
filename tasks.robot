@@ -19,7 +19,6 @@ Open the robot order website
 
 *** Keywords ***
 Get orders
-# https://robotsparebinindustries.com/orders.csv
     [Arguments]    ${url}
     Download    ${url}    overwrite=True
     ${orders}=    Read Table from CSV    orders.csv    header=True
@@ -88,7 +87,7 @@ Log Out And Close The Browser
 
 *** Tasks ***
 Order robots from RobotSpareBin Industries Inc
-    ${website_url}=    Get Secret    website_url 
+    ${website_url}=    Get Secret    website_url
     ${file_url}=    Get file URL from user
     Open the robot order website    ${website_url}
     ${orders}=    Get orders    ${file_url}
