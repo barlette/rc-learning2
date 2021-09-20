@@ -19,7 +19,6 @@ Open the robot order website
 
 *** Keywords ***
 Get orders
-# https://robotsparebinindustries.com/orders.csv
     [Arguments]    ${url}
     Download    ${url}    overwrite=True
     ${orders}=    Read Table from CSV    orders.csv    header=True
