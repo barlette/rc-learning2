@@ -63,14 +63,18 @@ Store the receipt as a PDF file
 Take a screenshot of the robot
     [Arguments]    ${OrderNumber}
     ${path}    Set Variable    ${CURDIR}${/}output${/}receipts${/}preview_order_${OrderNumber}.png
-    Screenshot    id:robot-preview    ${path}
-    [Return]    ${path}
+    Wait Until Element Is Visible    xpath://img[@alt='Head']
+    Wait Until Element Is Visible    xpath://img[@alt='Body']
+    Wait Until Element Is Visible    xpath://img[@alt='Legs']
+    Screenshot    id:robot-preview-image    ${path}
+    ${screenshot_list}=    Create List    ${path}
+    [Return]    ${screenshot_list}
 
 *** Keywords ***
 Embed the robot screenshot to the receipt PDF file
     [Arguments]    ${files}    ${pdf_path}
     Open Pdf    ${pdf_path}
-    Add Files To Pdf    ${files}    ${pdf_path}
+    Add Files To Pdf    ${files}    ${pdf_path}    True
     Close Pdf    ${pdf_path}
 
 *** Keywords ***
@@ -88,7 +92,7 @@ Log Out And Close The Browser
 
 *** Tasks ***
 Order robots from RobotSpareBin Industries Inc
-    ${website_url}=    Get Secret    website_url 
+    ${website_url}=    Get Secret    website_url
     ${file_url}=    Get file URL from user
     Open the robot order website    ${website_url}
     ${orders}=    Get orders    ${file_url}
@@ -99,8 +103,8 @@ Order robots from RobotSpareBin Industries Inc
         Wait Until Keyword Succeeds    5x    0.5s    Submit the order
         ${pdf}=    Store the receipt as a PDF file    ${row}[Order number]
         ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
-        ${files}=    Create List    ${pdf}    ${screenshot}
-        Embed the robot screenshot to the receipt PDF file    ${files}    ${pdf}
+# ${files}=    Create List    ${screenshot}
+        Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
         Go to order another robot
     END
     Create a ZIP file of the receipts
